@@ -11,6 +11,7 @@ PASSWORD = None
 DATABASE = None
 HOST     = None
 
+
 # set the credentials from a dictionary
 def fromDict(credentialsDict: dict):
     global USER, PASSWORD, DATABASE, HOST

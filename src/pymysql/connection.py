@@ -1,9 +1,9 @@
 import mysql.connector
-from mysql.connector.cursor import MySQLCursor
+from mysql.connector.cursor import MySQLCursor, MySQLCursorPrepared, MySQLCursorDict
 from . import credentials as db_credentials
 
 
-class Connection:
+class ConnectionBase:
     """A MySQL database connection"""
 
     #----------------------------------------------------------
@@ -44,12 +44,25 @@ class Connection:
     # Returns:
     #     MySQLCursor: The connected mysql cursor.
     #----------------------------------------------------------
-    def getCursor(self, as_dict: bool=True) -> MySQLCursor:
-        cursor = None
+    def getCursor(self) -> MySQLCursor:
+        raise NotImplementedError
 
-        if as_dict:
-            cursor = self.connection.cursor(dictionary=True)
-        else:
-            cursor = self.connection.cursor(prepared=True)
-        
-        return cursor
+
+
+class ConnectionPrepared(ConnectionBase):
+
+    #----------------------------------------------------------
+    # Return a prepared cursor
+    #----------------------------------------------------------
+    def getCursor(self) -> MySQLCursorPrepared:
+        return self.connection.cursor(prepared=True)
+
+class ConnectionDict(ConnectionBase):
+
+    #----------------------------------------------------------
+    # Return a dictionary cursor
+    #----------------------------------------------------------
+    def getCursor(self) -> MySQLCursorDict:
+        return self.connection.cursor(dictionary=True)
+
+

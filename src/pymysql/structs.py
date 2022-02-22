@@ -17,7 +17,7 @@ from typing import Any
 class DbOperationResult:
     successful: bool = False
     data      : Any  = None
-    error     : str  = None
+    error     : Exception  = None
 
 
 
