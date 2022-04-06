@@ -45,7 +45,7 @@ class ConnectionBase:
     #     MySQLCursor: The connected mysql cursor.
     #----------------------------------------------------------
     def getCursor(self) -> MySQLCursor:
-        raise NotImplementedError
+        return self.connection.cursor()
 
 
 

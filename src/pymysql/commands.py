@@ -1,3 +1,14 @@
+"""
+**********************************************************************************
+
+SQL Command that you can execute:
+    select:     SELECT a single row
+    selectAll:  SELECT multiple records
+    modify:     INSERT, UPDATE, or DELETE commands
+
+**********************************************************************************
+"""
+
 from .structs import DbOperationResult as DbOperationResult
 from .connection import ConnectionDict, ConnectionPrepared
 
