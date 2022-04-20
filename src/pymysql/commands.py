@@ -8,7 +8,7 @@ SQL Command that you can execute:
 
 **********************************************************************************
 """
-
+from __future__ import annotations
 from .structs import DbOperationResult as DbOperationResult
 from .connection import ConnectionDict, ConnectionPrepared
 
@@ -75,7 +75,35 @@ def _selectSteps(fetch_all: bool, sql_stmt: str, parms: tuple=None) -> DbOperati
 # Returns a DbOperationResult:
 #   sets the data field to the row count
 #------------------------------------------------------
-def modify(sql_stmt: str, parms: tuple=None) -> DbOperationResult:
+def modify(sql_stmt: str, parms: tuple=None) -> DbOperationResult:    
+    return _modifyCommand(False, sql_stmt, parms)
+
+#------------------------------------------------------
+# Execute a batch insert, update, or delete sql command
+#
+# Args:
+#   sql_stmt: sql statement to execute
+#   parms: sql parms to pass to the engine
+#
+# Returns a DbOperationResult:
+#   sets the data field to the row count
+#------------------------------------------------------
+def modifyBatch(sql_stmt: str, parms: list[tuple]=None) -> DbOperationResult:
+    return _modifyCommand(True, sql_stmt, parms)
+
+
+#------------------------------------------------------
+# Execute an insert, update, or delete sql command
+#
+# Args:
+#   execute_many: flag indicating to utilize the executemany MySqlCursor routine
+#   sql_stmt: sql statement to execute
+#   parms: sql parms to pass to the engine
+#
+# Returns a DbOperationResult:
+#   sets the data field to the row count
+#------------------------------------------------------
+def _modifyCommand(execute_many: bool, sql_stmt: str, parms: tuple | list[tuple]) -> DbOperationResult:
     result = DbOperationResult(successful=True)
     
     db = ConnectionPrepared()
@@ -83,7 +111,12 @@ def modify(sql_stmt: str, parms: tuple=None) -> DbOperationResult:
     try:
         db.connect()
         cursor = db.getCursor()
-        cursor.execute(sql_stmt, parms)
+
+        if execute_many:
+            cursor.executemany(sql_stmt, parms)
+        else:
+            cursor.execute(sql_stmt, parms)
+        
         db.commit()
         
         result.data = cursor.rowcount
@@ -93,6 +126,48 @@ def modify(sql_stmt: str, parms: tuple=None) -> DbOperationResult:
         db.close()
     
     return result
+
+#------------------------------------------------------
+# Call the specified stored procedure using the given parms
+#
+# Args:
+#   procedure: procedure name
+#   parms: a list of parms to pass to the procedure
+#
+# Returns a DbOperationResult:
+#   the data property is set to all the results returned from the procedure
+#------------------------------------------------------
+def proc(procedure: str, parms: list=None) -> DbOperationResult:
+    db_result = DbOperationResult(successful=True)
+    connection = ConnectionDict()
+
+    try:
+        # connect to the database
+        connection.connect()
+        mycursor = connection.getCursor()
+
+        # call the stored procedure
+        mycursor.callproc(procedure, parms)
+
+        # fetch all the datasets returned from the dataset
+        result_data = []
+        for stored_result in mycursor.stored_results():
+            records = stored_result.fetchall()
+            result_data.append(records)
+
+        db_result.data = result_data
+
+        connection.commit()
+
+    except Exception as e:
+        db_result.successful = False
+        db_result.data       = None
+        db_result.error      = e
+    
+    finally:
+        connection.close()
+    
+    return db_result
 
 
 #------------------------------------------------------
