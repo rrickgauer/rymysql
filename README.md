@@ -8,7 +8,7 @@ Simplified MySQL library for [mysql.connector](https://dev.mysql.com/doc/connect
 To install the library on your machine:
 
 ```bash
-pip install git+https://github.com/rrickgauer/pymysql.git
+pip install rymysql
 ```
 
 
