@@ -1,4 +1,4 @@
-# pymysql
+# rymysql
 
 Simplified MySQL library for [mysql.connector](https://dev.mysql.com/doc/connector-python/en/)
 
