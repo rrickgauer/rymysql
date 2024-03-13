@@ -19,10 +19,10 @@ To use the libary in your code you just need to set the credential values:
 ```py
 import pymysql
 
-pymysql.credentials.USER     = 'mysql_user'
-pymysql.credentials.PASSWORD = '123'
-pymysql.credentials.DATABASE = 'test_database'
-pymysql.credentials.HOST     = 'localhost'
+rymysql.credentials.USER     = 'mysql_user'
+rymysql.credentials.PASSWORD = '123'
+rymysql.credentials.DATABASE = 'test_database'
+rymysql.credentials.HOST     = 'localhost'
 ```
 
 Or you could use the `fromDict` routine to set the credential values from a dictionary:
@@ -38,7 +38,7 @@ my_credentials = dict(
     host     = 'localhost',
 )
 
-pymysql.credentials.fromDict(my_credentials)
+rymysql.credentials.fromDict(my_credentials)
 ```
 
 
@@ -54,7 +54,7 @@ Currently there are 3 commands:
 ### Select Commands
 
 
-To select a single record, use the `pymysql.commands.select` routine:
+To select a single record, use the `rymysql.commands.select` routine:
 
 ```py
 sql = '''
@@ -64,19 +64,17 @@ sql = '''
 '''
 
 parms = tuple(42)
-
-
-result = pymysql.commands.select(sql, parms)
+result = rymysql.commands.select(sql, parms)
 
 print(result.data.get('namefirst'))
 ```
 
-To select multiple records, use the `pymysql.commands.selectAll` routine:
+To select multiple records, use the `rymysql.commands.selectAll` routine:
 
 ```py
 sql = 'SELECT n.namefirst, n.namelast FROM Names n;'
 parms = None
-result = pymysql.commands.selectAll(sql, parms)
+result = rymysql.commands.selectAll(sql, parms)
 
 for record in result.data:
     print(record.get('namefirst'))
@@ -84,7 +82,7 @@ for record in result.data:
 
 ### Modify Command
 
-`pymysql.commands.modify` is for INSERT, UPDATE, or DELETE sql commands.
+`rymysql.commands.modify` is for INSERT, UPDATE, or DELETE sql commands.
 
 
 For example, to insert a record:
@@ -94,7 +92,7 @@ For example, to insert a record:
 sql = 'INSERT INTO Names (namefirst, namelast) VALUES (%s, %s);'
 parms = ('Ryan', 'Rickgauer')
 
-result = pymysql.commands.modify(sql, parms)
+result = rymysql.commands.modify(sql, parms)
 
 print(result.data)  # 1 - rowsaffected
 ```
