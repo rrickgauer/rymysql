@@ -17,7 +17,7 @@ pip install rymysql
 To use the libary in your code you just need to set the credential values:
 
 ```py
-import pymysql
+import rymysql
 
 rymysql.credentials.USER     = 'mysql_user'
 rymysql.credentials.PASSWORD = '123'
@@ -29,7 +29,7 @@ Or you could use the `fromDict` routine to set the credential values from a dict
 
 
 ```py
-import pymysql
+import rymysql
 
 my_credentials = dict(
     user     = 'mysql_user',
@@ -46,9 +46,10 @@ rymysql.credentials.fromDict(my_credentials)
 
 
 Currently there are 3 commands:
-  1. `select`
-  1. `selectAll`
-  1. `modify`
+
+1. `select`
+1. `selectAll`
+1. `modify`
 
 
 ### Select Commands
